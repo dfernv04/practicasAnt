@@ -1,0 +1,34 @@
+ 
+<project name="ProbandoAnt" default="limpiar-compilar-ejecutar" basedir=".">
+ 
+    <presetdef name="javac">
+        <javac includeantruntime="false" />
+    </presetdef>
+ 
+    <!--propiedades globales del proyecto -->
+    <property name="fuente" value="./src" />
+    <property name="destino" value="./classes" />
+
+    <target name="compilar">
+		<echo message="Iniciando Compilacion" />
+        <mkdir dir="${destino}"/>
+        <javac srcdir="${fuente}" destdir="${destino}" verbose="no"/>
+		<echo message="Finalizando Compilacion" />
+    </target>
+
+	<target name="ejecutar">
+		<java fork="yes" classname="HolaAlumnos" failonerror="true">
+			<classpath>
+				<pathelement path="${destino}"/>
+           	</classpath>
+		</java>
+	</target>
+
+	<target name="limpiar">
+        <delete dir="${destino}"/>
+    </target>
+
+ 	<target name="limpiar-compilar-ejecutar" depends="limpiar, compilar, ejecutar"/>
+
+
+</project>

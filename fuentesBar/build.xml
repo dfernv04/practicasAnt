@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<project name="Ejemplo" basedir="." default="todo">
+    <property name="src" value="src"/>
+    <property name="lib" value="lib"/>
+    <property name="classes" value="classes"/>
+    <property name="dist" value="dist"/>
+    <property name="doc" value="doc"/>
+    <property name="conf" value="etc"/>
+
+    <property name="paquetes" value="es.unileon.prg1.bar.*"/>
+    <property name="titulo" value="Un ejemplo completo"/>
+
+    <target name="limpiar">
+      <delete dir="${classes}"/>
+      <delete dir="${doc}"/>
+      <delete dir="${dist}"/>
+      <delete file="${conf}/log.txt"/>
+      <delete file="${src}/LEEME.txt"/>
+    </target>
+
+    <target name="compilar" depends="limpiar">
+      <mkdir dir="${classes}"/>
+      <mkdir dir="${conf}"/>
+      <javac srcdir="${src}" destdir="${classes}" classpath="${lib}"
+         verbose="true" debug="true"/>
+      <echo message="Compilacion terminada"
+         file="${conf}/log.txt"/>
+    </target>
+
+    <target name="documentar">
+      <mkdir dir="${doc}"/>
+      <javadoc sourcepath="${src}" classpath="${lib}"
+         packagenames="${paquetes}"
+         destdir="${doc}"
+         verbose="true" author="true"
+         access="private" splitindex="true" version="true"
+         windowtitle="${titulo}" doctitle="${titulo}"/>
+    </target>
+
+    <target name="distribuir">
+      <mkdir dir="${dist}"/>
+      <jar destfile="${dist}/bar.jar" basedir="${classes}"
+         compress="true">
+         <manifest>
+             <attribute name="Main-Class"
+             value="es.unileon.prg1.bar.PruebaMenuPrincipal"/>
+         </manifest>
+      </jar>
+      <copy file="LEEME.txt" todir="${src}"/>
+      <zip zipfile="${dist}/bar_src.zip" basedir="${src}"
+         compress="true"/>
+    </target>
+
+    <target name="probar" depends="compilar">
+      <java classname="es.unileon.prg1.bar.PruebaMenuPrincipal">
+         <classpath>
+              <pathelement path="${classes}"/>
+              <pathelement path="${lib}"/>
+         </classpath>
+	 <arg value="Pepe"/>
+      </java>
+    </target>
+
+    <target name="todo" depends="compilar, distribuir, documentar, probar"/>
+
+</project>
